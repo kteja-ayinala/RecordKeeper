@@ -12,14 +12,18 @@
 
     }
 
-    public class TenantSecurityInfo : Tenant
+    public class TenantSecurityInfo 
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
         public string EmergencyContact { get; set; }
         public string EmergencyPhoneNumber { get; set; }
     }
 
-    public class TenantStayInfo: TenantSecurityInfo
+    public class TenantStayInfo
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
         public int Room { get; set; }
         public double Rent { get; set; }
     }

@@ -34,10 +34,6 @@ namespace RecordKeeper.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
@@ -58,13 +54,15 @@ namespace RecordKeeper.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tenants");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Tenant");
                 });
 
             modelBuilder.Entity("RecordKeeper.TenantSecurityInfo", b =>
                 {
-                    b.HasBaseType("RecordKeeper.Tenant");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("EmergencyContact")
                         .IsRequired()
@@ -74,16 +72,26 @@ namespace RecordKeeper.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ID")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("TenantSecurityInfo");
+                    b.HasKey("Id");
+
+                    b.ToTable("TenantSecurityInfos");
                 });
 
             modelBuilder.Entity("RecordKeeper.TenantStayInfo", b =>
                 {
-                    b.HasBaseType("RecordKeeper.TenantSecurityInfo");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Rent")
                         .HasColumnType("float");
@@ -91,7 +99,9 @@ namespace RecordKeeper.Migrations
                     b.Property<int>("Room")
                         .HasColumnType("int");
 
-                    b.HasDiscriminator().HasValue("TenantStayInfo");
+                    b.HasKey("Id");
+
+                    b.ToTable("TenantStayInfos");
                 });
 #pragma warning restore 612, 618
         }
