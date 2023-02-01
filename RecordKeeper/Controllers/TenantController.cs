@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RecordKeeper.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -16,25 +17,28 @@ namespace RecordKeeper.Controllers
         }
         // GET: api/<TenantController>
         [HttpGet]
-        public IEnumerable<Tenant> Get()
+        public async Task<IActionResult> Get()
         {
-            return _context.Tenants;
+             var tenants = await _context.Tenants.ToListAsync();
+             return Ok(tenants);
         }
 
         // GET api/<TenantController>/5
         [HttpGet("{id}")]
-        public Tenant Get(int id)
+        public  IActionResult Get(int id)
         {
-            var x = _context.Tenants.Find(id);
-            return x;
+            var tenant = _context.Tenants.Find(id);
+            return Ok(tenant);
         }
 
         // POST api/<TenantController>
         [HttpPost]
-        public void Post([FromBody] Tenant value)
+        public async Task<IActionResult> Post([FromBody] Tenant value)
         {
-            _context.Tenants.Add(value);
+            await _context.Tenants.AddAsync(value);
             _context.SaveChanges();
+
+            return Ok(value);
         }
 
 
