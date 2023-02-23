@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecordKeeper.Data;
 
@@ -17,6 +19,7 @@ namespace RecordKeeper.Controllers
         }
         // GET: api/<TenantController>
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get()
         {
              var tenants = await _context.Tenants.ToListAsync();
@@ -25,6 +28,7 @@ namespace RecordKeeper.Controllers
 
         // GET api/<TenantController>/5
         [HttpGet("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public  IActionResult Get(int id)
         {
             var tenant = _context.Tenants.Find(id);
@@ -33,8 +37,11 @@ namespace RecordKeeper.Controllers
 
         // POST api/<TenantController>
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Post([FromBody] Tenant value)
         {
+            value.StartDate = DateTime.Parse(value.StartDate.ToString());
+            value.EndDate = DateTime.Parse(value.EndDate.ToString());
             await _context.Tenants.AddAsync(value);
             _context.SaveChanges();
 
