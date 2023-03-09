@@ -19,7 +19,8 @@ namespace RecordKeeper.Controllers
         }
         // GET: api/<TenantController>
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [AllowAnonymous]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get()
         {
              var tenants = await _context.Tenants.ToListAsync();
@@ -28,8 +29,9 @@ namespace RecordKeeper.Controllers
 
         // GET api/<TenantController>/5
         [HttpGet("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public  IActionResult Get(int id)
+        [AllowAnonymous]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult Get(int id)
         {
             var tenant = _context.Tenants.Find(id);
             return Ok(tenant);
@@ -37,7 +39,8 @@ namespace RecordKeeper.Controllers
 
         // POST api/<TenantController>
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [AllowAnonymous]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Post([FromBody] Tenant value)
         {
             value.StartDate = DateTime.Parse(value.StartDate.ToString());
@@ -48,6 +51,23 @@ namespace RecordKeeper.Controllers
             return Ok(value);
         }
 
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateTenant([FromRoute] int id, Tenant updateTenant)
+        {
+            var tenant =
+            await _context.Tenants.FindAsync( id);
+
+            if (tenant == null)
+            {
+                return NotFound();
+            }
+
+            tenant = updateTenant;
+
+            await _context.SaveChangesAsync();
+            return Ok(tenant);
+        }
 
     }
 }
